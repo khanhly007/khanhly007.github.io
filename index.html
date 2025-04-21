@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WebGIS với Layer Control</title>
+  <title>WebGIS Cơ Bản Có Tìm kiếm và Layer Control</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Leaflet CSS & JS -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-  <!-- Leaflet Geocoder Plugin -->
+  <!-- Leaflet Geocoder CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
   <style>
     #map {
@@ -22,27 +19,56 @@
 </head>
 <body>
 
-  <h2>WebGIS Cơ Bản + Tìm kiếm + Layer Control</h2>
-  <div id="map"></div>
+<h2>WebGIS Demo — Tìm kiếm + Chọn lớp nền</h2>
+<div id="map"></div>
 
-  <script>
-    // Lớp nền OpenStreetMap
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    });
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Leaflet Geocoder JS -->
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
-    // Lớp nền Esri Satellite
-    var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/' +
-      'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles © Esri'
-    });
+<script>
+  // Lớp nền OpenStreetMap
+  var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  });
 
-    // Lớp nền Carto Dark Mode
-    var cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '© CartoDB'
-    });
+  // Lớp nền Esri Satellite
+  var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles © Esri'
+  });
 
-    // Khởi tạo bản đồ với OpenStreetMap làm lớp nền mặc định
-    var map = L.map('map', {
-      center: [21.0285, 105.8542],
-      zoom:
+  // Lớp nền Carto Dark Mode
+  var cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© CartoDB'
+  });
+
+  // Khởi tạo bản đồ với lớp nền OpenStreetMap
+  var map = L.map('map', {
+    center: [21.0285, 105.8542],
+    zoom: 13,
+    layers: [osm]  // Lớp nền mặc định
+  });
+
+  // Thêm marker ví dụ
+  var marker = L.marker([21.0285, 105.8542]).addTo(map)
+    .bindPopup("Chào mừng đến Hà Nội!")
+    .openPopup();
+
+  // Tạo Layer Control (dropdown chọn lớp nền)
+  var baseMaps = {
+    "OpenStreetMap (Đường phố)": osm,
+    "Esri Satellite (Vệ tinh)": esri,
+    "Carto Dark Mode (Tối)": cartoDark
+  };
+  L.control.layers(baseMaps).addTo(map);
+
+  // Thêm control tìm kiếm địa điểm
+  L.Control.geocoder({
+    defaultMarkGeocode: true
+  }).addTo(map);
+
+</script>
+
+</body>
+</html>
