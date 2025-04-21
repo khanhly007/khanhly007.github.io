@@ -1,91 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WebGIS với Icon Địa điểm</title>
+  <title>WebGIS cơ bản với GeoJSON</title>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-
   <style>
-    #map { height: 600px; }
+    #map { height: 100vh; }
   </style>
 </head>
 <body>
 
-<h2>WebGIS — Custom Icon Địa điểm</h2>
 <div id="map"></div>
 
+<!-- Leaflet library -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Search plugin -->
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
 <script>
+  // Tạo bản đồ
+  var map = L.map('map').setView([16.047079, 108.206230], 6);
+
+  // Các lớp nền
   var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+      attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© Esri'
   });
 
-  var map = L.map('map', {
-    center: [21.0285, 105.8542],
-    zoom: 14,
-    layers: [osm]
+  var dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© Carto'
   });
 
-  // Icon nhà thờ
+  // Layer control
+  var baseMaps = {
+    "OpenStreetMap": osm,
+    "Esri Satellite": esri,
+    "Carto Dark Mode": dark
+  };
+
+  var overlayMaps = {};
+  var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+  // Thêm GeoJSON overlay
+  fetch('vietnam_provinces.geojson')
+    .then(response => response.json())
+    .then(data => {
+      var provinceLayer = L.geoJSON(data, {
+        style: {
+          color: 'blue',
+          weight: 2,
+          fillOpacity: 0.1
+        },
+        onEachFeature: function (feature, layer) {
+          layer.bindPopup("Tỉnh/TP: " + feature.properties.NAME_1);
+        }
+      }).addTo(map);
+
+      // Cho vào layer control
+      layerControl.addOverlay(provinceLayer, "Ranh giới Tỉnh/TP");
+    });
+
+  // Thêm một vài icon marker
   var churchIcon = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
+    popupAnchor: [0, -30]
   });
 
-  // Icon bệnh viện
+  L.marker([21.0278, 105.8342], {icon: churchIcon}).addTo(map)
+    .bindPopup("Nhà thờ lớn Hà Nội");
+
   var hospitalIcon = L.icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/2965/2965567.png',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
+    popupAnchor: [0, -30]
   });
 
-  // Icon trường học
-  var schoolIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/1670/1670048.png',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
-  });
+  L.marker([10.762622, 106.660172], {icon: hospitalIcon}).addTo(map)
+    .bindPopup("Bệnh viện Chợ Rẫy");
 
-  // Marker nhà thờ
-  L.marker([21.030, 105.850], {icon: churchIcon}).addTo(map)
-    .bindPopup("Nhà thờ Lớn Hà Nội");
+  // Tương tự bạn có thể thêm quán ăn, shopping mall...
 
-  // Marker bệnh viện
-  L.marker([21.029, 105.852], {icon: hospitalIcon}).addTo(map)
-    .bindPopup("Bệnh viện Việt Đức");
-
-  // Marker trường học
-  L.marker([21.027, 105.855], {icon: schoolIcon}).addTo(map)
-    .bindPopup("Trường Đại học Quốc gia");
-
-  // Tìm kiếm
-  L.Control.geocoder({
-    defaultMarkGeocode: true
-  }).addTo(map);
-// Load file GeoJSON ranh giới tỉnh/thành Việt Nam
-fetch('vietnam_provinces.geojson')
-  .then(response => response.json())
-  .then(data => {
-    L.geoJSON(data, {
-      style: {
-        color: 'blue',
-        weight: 2,
-        fillOpacity: 0.1
-      },
-      onEachFeature: function (feature, layer) {
-        layer.bindPopup("Tỉnh/TP: " + feature.properties.NAME_1);
-      }
-    }).addTo(map);
-  });
+  // Thêm Search Control
+  L.Control.geocoder().addTo(map);
 
 </script>
 
