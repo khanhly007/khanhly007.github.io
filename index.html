@@ -71,6 +71,21 @@
   L.Control.geocoder({
     defaultMarkGeocode: true
   }).addTo(map);
+// Load file GeoJSON ranh giới tỉnh/thành Việt Nam
+fetch('vietnam_provinces.geojson')
+  .then(response => response.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: {
+        color: 'blue',
+        weight: 2,
+        fillOpacity: 0.1
+      },
+      onEachFeature: function (feature, layer) {
+        layer.bindPopup("Tỉnh/TP: " + feature.properties.NAME_1);
+      }
+    }).addTo(map);
+  });
 
 </script>
 
