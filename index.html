@@ -1,69 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WebGIS Cơ Bản Có Tìm kiếm và Layer Control</title>
+  <title>WebGIS Nhiều Loại Địa Điểm</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <!-- Leaflet Geocoder CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
   <style>
-    #map {
-      height: 600px;
-      width: 100%;
-    }
+    #map { height: 600px; }
   </style>
 </head>
 <body>
 
-<h2>WebGIS Demo — Tìm kiếm + Chọn lớp nền</h2>
+<h2>WebGIS — Nhiều Loại Địa Điểm với Icon Riêng</h2>
 <div id="map"></div>
 
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<!-- Leaflet Geocoder JS -->
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 <script>
-  // Lớp nền OpenStreetMap
   var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
   });
 
-  // Lớp nền Esri Satellite
-  var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles © Esri'
-  });
-
-  // Lớp nền Carto Dark Mode
-  var cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© CartoDB'
-  });
-
-  // Khởi tạo bản đồ với lớp nền OpenStreetMap
   var map = L.map('map', {
     center: [21.0285, 105.8542],
-    zoom: 13,
-    layers: [osm]  // Lớp nền mặc định
+    zoom: 14,
+    layers: [osm]
   });
 
-  // Thêm marker ví dụ
-  var marker = L.marker([21.0285, 105.8542]).addTo(map)
-    .bindPopup("Chào mừng đến Hà Nội!")
-    .openPopup();
-
-  // Tạo Layer Control (dropdown chọn lớp nền)
-  var baseMaps = {
-    "OpenStreetMap (Đường phố)": osm,
-    "Esri Satellite (Vệ tinh)": esri,
-    "Carto Dark Mode (Tối)": cartoDark
+  // Icon các loại địa điểm
+  var icons = {
+    church: L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    }),
+    hospital: L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/2965/2965567.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    }),
+    school: L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/1670/1670048.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    }),
+    court: L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3062/3062634.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    }),
+    restaurant: L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3595/3595455.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    }),
+    mall: L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3144/3144456.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    })
   };
-  L.control.layers(baseMaps).addTo(map);
 
-  // Thêm control tìm kiếm địa điểm
+  // Các địa điểm với icon tương ứng
+  var places = [
+    {name: "Nhà thờ Lớn Hà Nội", lat: 21.030, lng: 105.850, icon: icons.church},
+    {name: "Bệnh viện Việt Đức", lat: 21.029, lng: 105.852, icon: icons.hospital},
+    {name: "Trường ĐH Quốc gia", lat: 21.027, lng: 105.855, icon: icons.school},
+    {name: "Tòa án Nhân dân TP Hà Nội", lat: 21.032, lng: 105.853, icon: icons.court},
+    {name: "Nhà hàng Lẩu Nấm", lat: 21.031, lng: 105.856, icon: icons.restaurant},
+    {name: "Vincom Center Bà Triệu", lat: 21.025, lng: 105.850, icon: icons.mall},
+    {name: "Nhà hàng BBQ Garden", lat: 21.028, lng: 105.849, icon: icons.restaurant},
+    {name: "Vincom Mega Mall Royal City", lat: 21.004, lng: 105.820, icon: icons.mall},
+    {name: "Trường ĐH Bách Khoa Hà Nội", lat: 21.004, lng: 105.842, icon: icons.school}
+  ];
+
+  // Hiển thị marker cho từng địa điểm
+  places.forEach(function(p) {
+    L.marker([p.lat, p.lng], {icon: p.icon}).addTo(map)
+      .bindPopup(p.name);
+  });
+
+  // Tìm kiếm vị trí
   L.Control.geocoder({
     defaultMarkGeocode: true
   }).addTo(map);
