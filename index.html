@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WebGIS Cơ Bản với Leaflet</title>
+  <title>WebGIS với Tìm kiếm</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Thư viện Leaflet CSS -->
+  
+  <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <!-- Thư viện Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Leaflet Geocoder Plugin -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
   <style>
     #map {
       height: 600px;
@@ -17,29 +22,26 @@
 </head>
 <body>
 
-  <h2>WebGIS on-the-way</h2>
+  <h2>WebGIS Cơ Bản + Tìm kiếm vị trí</h2>
   <div id="map"></div>
 
   <script>
-    // Khởi tạo bản đồ và đặt tọa độ trung tâm, zoom level
-    var map = L.map('map').setView([21.0285, 105.8542], 13); // Hà Nội
+    // Khởi tạo bản đồ
+    var map = L.map('map').setView([21.0285, 105.8542], 13);
 
-    // Thêm layer bản đồ nền OpenStreetMap
+    // Bản đồ nền
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
-    
-    // Thêm lớp nền từ ESRI World 
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
-      attribution: 'Tiles Esri &mdash; Source: Esri, Maxar, Earthstar Geographics', 
-      maxZoom: 19 
+
+    // Thêm marker
+    var marker = L.marker([21.0285, 105.8542]).addTo(map);
+    marker.bindPopup("<b>Chào mừng đến với Hà Nội!</b><br>Đây là một popup.").openPopup();
+
+    // Thêm control tìm kiếm vị trí
+    L.Control.geocoder({
+      defaultMarkGeocode: true
     }).addTo(map);
-
-    // Thêm marker vào bản đồ
-    var marker = L.marker([20.9888, 105.7964]).addTo(map);
-
-    // Thêm popup cho marker
-    marker.bindPopup("<b> Nhà trắng Hanu</b><br>Đây là chỗ đọc sách tuyetvoi huhu").openPopup();
 
   </script>
 
