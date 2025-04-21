@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebGIS Cơ Bản với Leaflet</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Thư viện Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Thư viện Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    #map {
+      height: 600px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>WebGIS Cơ Bản - Demo Map với Leaflet</h2>
+  <div id="map"></div>
+
+  <script>
+    // Khởi tạo bản đồ và đặt tọa độ trung tâm, zoom level
+    var map = L.map('map').setView([21.0285, 105.8542], 13); // Hà Nội
+
+    // Thêm layer bản đồ nền OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Thêm marker vào bản đồ
+    var marker = L.marker([21.0285, 105.8542]).addTo(map);
+
+    // Thêm popup cho marker
+    marker.bindPopup("<b>Chào mừng đến với Hà Nội!</b><br>Đây là một popup.").openPopup();
+
+  </script>
+
+</body>
+</html>
