@@ -28,6 +28,12 @@
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
+    
+    // Thêm lớp nền từ ESRI World 
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
+      attribution: 'Tiles Esri &mdash; Source: Esri, Maxar, Earthstar Geographics', 
+      maxZoom: 19 
+    }).addTo(map);
 
     // Thêm marker vào bản đồ
     var marker = L.marker([20.9888, 105.7964]).addTo(map);
