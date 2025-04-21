@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WebGIS Nhiều Loại Địa Điểm</title>
+  <title>WebGIS với Icon Địa điểm</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<h2>WebGIS — Nhiều Loại Địa Điểm với Icon Riêng</h2>
+<h2>WebGIS — Custom Icon Địa điểm</h2>
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -31,66 +31,43 @@
     layers: [osm]
   });
 
-  // Icon các loại địa điểm
-  var icons = {
-    church: L.icon({
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    }),
-    hospital: L.icon({
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/2965/2965567.png',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    }),
-    school: L.icon({
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/1670/1670048.png',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    }),
-    court: L.icon({
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3062/3062634.png',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    }),
-    restaurant: L.icon({
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3595/3595455.png',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    }),
-    mall: L.icon({
-      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3144/3144456.png',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    })
-  };
-
-  // Các địa điểm với icon tương ứng
-  var places = [
-    {name: "Nhà thờ Lớn Hà Nội", lat: 21.030, lng: 105.850, icon: icons.church},
-    {name: "Bệnh viện Việt Đức", lat: 21.029, lng: 105.852, icon: icons.hospital},
-    {name: "Trường ĐH Quốc gia", lat: 21.027, lng: 105.855, icon: icons.school},
-    {name: "Tòa án Nhân dân TP Hà Nội", lat: 21.032, lng: 105.853, icon: icons.court},
-    {name: "Nhà hàng Lẩu Nấm", lat: 21.031, lng: 105.856, icon: icons.restaurant},
-    {name: "Vincom Center Bà Triệu", lat: 21.025, lng: 105.850, icon: icons.mall},
-    {name: "Nhà hàng BBQ Garden", lat: 21.028, lng: 105.849, icon: icons.restaurant},
-    {name: "Vincom Mega Mall Royal City", lat: 21.004, lng: 105.820, icon: icons.mall},
-    {name: "Trường ĐH Bách Khoa Hà Nội", lat: 21.004, lng: 105.842, icon: icons.school}
-  ];
-
-  // Hiển thị marker cho từng địa điểm
-  places.forEach(function(p) {
-    L.marker([p.lat, p.lng], {icon: p.icon}).addTo(map)
-      .bindPopup(p.name);
+  // Icon nhà thờ
+  var churchIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
   });
 
-  // Tìm kiếm vị trí
+  // Icon bệnh viện
+  var hospitalIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2965/2965567.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+
+  // Icon trường học
+  var schoolIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/1670/1670048.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+
+  // Marker nhà thờ
+  L.marker([21.030, 105.850], {icon: churchIcon}).addTo(map)
+    .bindPopup("Nhà thờ Lớn Hà Nội");
+
+  // Marker bệnh viện
+  L.marker([21.029, 105.852], {icon: hospitalIcon}).addTo(map)
+    .bindPopup("Bệnh viện Việt Đức");
+
+  // Marker trường học
+  L.marker([21.027, 105.855], {icon: schoolIcon}).addTo(map)
+    .bindPopup("Trường Đại học Quốc gia");
+
+  // Tìm kiếm
   L.Control.geocoder({
     defaultMarkGeocode: true
   }).addTo(map);
