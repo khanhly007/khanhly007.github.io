@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WebGIS với Tìm kiếm</title>
+  <title>WebGIS với Layer Control</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -22,28 +22,27 @@
 </head>
 <body>
 
-  <h2>WebGIS Cơ Bản + Tìm kiếm vị trí</h2>
+  <h2>WebGIS Cơ Bản + Tìm kiếm + Layer Control</h2>
   <div id="map"></div>
 
   <script>
-    // Khởi tạo bản đồ
-    var map = L.map('map').setView([21.0285, 105.8542], 13);
-
-    // Bản đồ nền
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // Lớp nền OpenStreetMap
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+    });
 
-    // Thêm marker
-    var marker = L.marker([21.0285, 105.8542]).addTo(map);
-    marker.bindPopup("<b>Chào mừng đến với Hà Nội!</b><br>Đây là một popup.").openPopup();
+    // Lớp nền Esri Satellite
+    var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/' +
+      'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri'
+    });
 
-    // Thêm control tìm kiếm vị trí
-    L.Control.geocoder({
-      defaultMarkGeocode: true
-    }).addTo(map);
+    // Lớp nền Carto Dark Mode
+    var cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© CartoDB'
+    });
 
-  </script>
-
-</body>
-</html>
+    // Khởi tạo bản đồ với OpenStreetMap làm lớp nền mặc định
+    var map = L.map('map', {
+      center: [21.0285, 105.8542],
+      zoom:
